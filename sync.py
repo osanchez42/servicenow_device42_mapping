@@ -1,6 +1,7 @@
 import json
 import base64
 import requests
+from requests.auth import HTTPBasicAuth
 import xml.etree.ElementTree as eTree
 from lib import *
 
@@ -24,19 +25,19 @@ class ServiceNow(Service):
 
         result = {}
         if method == 'GET':
-            response = requests.get(self.url + path, auth=(self.user, self.password),
+            response = requests.get(self.url + path, auth=HTTPBasicAuth(self.user, self.password),
                                     headers=headers, verify=False)
             result = response.json()
         elif method == 'POST':
-            response = requests.post(self.url + path, {}, data, auth=(self.user, self.password),
+            response = requests.post(self.url + path, {}, data, auth=HTTPBasicAuth(self.user, self.password),
                                      headers=headers, verify=False)
             result = response.json()
         elif method == 'PUT':
-            response = requests.put(self.url + path, json.dumps(data), auth=(self.user, self.password),
+            response = requests.put(self.url + path, json.dumps(data), auth=HTTPBasicAuth(self.user, self.password),
                                     headers=headers, verify=False)
             result = response.json()
         elif method == 'PATCH':
-            response = requests.patch(self.url + path, json.dumps(data), auth=(self.user, self.password),
+            response = requests.patch(self.url + path, json.dumps(data), auth=HTTPBasicAuth(self.user, self.password),
                                       headers=headers, verify=False)
             result = response.json()
         return result
@@ -44,8 +45,8 @@ class ServiceNow(Service):
 
 class Device42(Service):
     def request(self, path, method, data=()):
+
         headers = {
-            'Authorization': 'Basic ' + base64.b64encode(self.user + ':' + self.password),
             'Content-Type': 'application/x-www-form-urlencoded'
         }
 
@@ -53,19 +54,19 @@ class Device42(Service):
 
         if method == 'GET':
             response = requests.get(self.url + path,
-                                    headers=headers, verify=False)
+                                    headers=headers, auth=HTTPBasicAuth(self.user, self.password), verify=False)
             result = response.json()
         elif method == 'POST':
             response = requests.post(self.url + path, data,
-                                     headers=headers, verify=False)
+                                     headers=headers, auth=HTTPBasicAuth(self.user, self.password), verify=False)
             result = response.json()
         elif method == 'PUT':
             response = requests.put(self.url + path, data,
-                                    headers=headers, verify=False)
+                                    headers=headers, auth=HTTPBasicAuth(self.user, self.password), verify=False)
             result = response.json()
         elif method == 'PATCH':
-            response = requests.patch(self.url + path, json.dumps(data), auth=(self.user, self.password),
-                                      headers=headers, verify=False)
+            response = requests.patch(self.url + path, json.dumps(data), auth=HTTPBasicAuth(self.user, self.password),
+                                      headers=headers,  verify=False)
             result = response.json()
         return result
 
@@ -78,7 +79,7 @@ def init_services(settings):
 
 
 def task_execute(task, services):
-    print 'Execute task:', task.attrib['description']
+    print('Execute task:', task.attrib['description'])
 
     _resource = task.find('api/resource')
     _target = task.find('api/target')
@@ -95,7 +96,7 @@ def task_execute(task, services):
     globals()[mapping.attrib['callback']](source, mapping, _target, _resource, target_api, resource_api)
 
 
-print 'Running...'
+print('Running...')
 
 # Load mapping
 config = eTree.parse('mapping.xml')

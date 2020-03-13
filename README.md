@@ -9,7 +9,7 @@ This repository contains script that helps you sync data between servicenow and 
 
 ### Requirements
 -----------------------------
-    * python 2.7.x
+    * python 3.7.x
     * requests (you can install it with pip install requests or apt-get install python-requests)
 
 ### Usage

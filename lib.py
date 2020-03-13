@@ -1,8 +1,4 @@
 import re
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 DEBUG = False
 
 
@@ -81,8 +77,8 @@ def to_d42(source, mapping, _target, _resource, target_api, resource_api):
                 api_result = target_api.request(_target.attrib['path'], _target.attrib['method'], data)
 
             if DEBUG:
-                print data
-                print api_result
+                print(data)
+                print(api_result)
 
             # update stored device in ServiceNow
             if stored_device42_id is None:
@@ -90,7 +86,7 @@ def to_d42(source, mapping, _target, _resource, target_api, resource_api):
                     'u_device42_id': api_result['msg'][1]
                 })
 
-            print '.'
+            print('.')
     except KeyError:
         print('[Warning] No Data in Resource, Continuing')
 
@@ -213,7 +209,7 @@ def from_d42(source, mapping, _target, _resource, target_api, resource_api):
             api_result = target_api.request(_target.attrib['path'], _target.attrib['method'], data)
 
         if DEBUG:
-            print data
-            print api_result
+            print(data)
+            print(api_result)
 
-        print '.'
+        print('.')
